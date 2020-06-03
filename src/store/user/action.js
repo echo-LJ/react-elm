@@ -18,3 +18,11 @@ export const saveAvander = (imgPath) => {
     imgPath
   }
 } 
+
+// 保存图片地址
+export const saveImg = path => {
+  return {
+    type: user.SAVEIMG,
+    path,
+  }
+}

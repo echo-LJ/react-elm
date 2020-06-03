@@ -5,7 +5,7 @@ import asyncComponent from '@/utils/asyncComponent'
 
 // import home from '@/pages/home/home'
 const login = asyncComponent(() => import("@/pages/login/login"))
-// const profile = asyncComponent(() => import("@/pages/profile/profile"))
+const profile = asyncComponent(() => import("@/pages/profile/profile"))
 
 
 export default class RouteConfig extends Component {
@@ -14,6 +14,7 @@ export default class RouteConfig extends Component {
       <HashRouter>
         <Switch>
           <Route path="/login" component= {login}/>
+          <Route path="/profile" component= {profile}/>
           <Redirect exact from='/' to='/login'/>
           <Route component= {login}/>
         </Switch>

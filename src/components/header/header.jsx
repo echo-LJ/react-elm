@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import './header.scss'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+
 
 class Header extends Component {
   static defaullProps = {
@@ -9,7 +11,7 @@ class Header extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     signUp: PropTypes.bool,
-    goBack: PropTypes.bool
+    goBack: PropTypes.bool,
   }
   state = {
     userInfo: '1',
@@ -26,4 +28,7 @@ class Header extends Component {
     )
   }
 }
-export default Header
+
+export default connect(state => ({
+}), {
+})(Header)

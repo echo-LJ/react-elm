@@ -1,15 +1,17 @@
 import React, {Component} from 'react'
-// import {Link} from 'react-router-dom'
-import Header from '@/components/header/header'
+import {Switch, Route} from 'react-router-dom'
 import PropTypes from 'prop-types'
+import Header from '@/components/header/header'
 import {connect} from 'react-redux'
 // import API from '../../api/api'
 import './set_user.scss'
+import Name from './name/name'
+import Address from './address/address'
+import Add from './add/add'
 import {resetUserInfo} from '@/store/user/action'
 
 class SetUser extends Component {
   static propTypes = {
-
     resetUserInfo: PropTypes.func.isRequired,
     userInfo: PropTypes.object
   }
@@ -17,9 +19,6 @@ class SetUser extends Component {
     headerTitle: '',
     type: '',
     name: '',
-    activeInput: '',
-    activeText: '',
-    fontopacity: ''
   }
   goBack = () => {
     this.props.history.goBack()
@@ -29,12 +28,14 @@ class SetUser extends Component {
     let headerTitle
     switch (type){
       case 'name':
-        console.log(2222)
         headerTitle = '修改用户名'
         break
       case 'address':
-          headerTitle = '编辑地址'
-          break
+        headerTitle = '编辑地址'
+        break
+      case 'add':
+        headerTitle = '新增地址'
+        break
       default: 
         headerTitle = ''
     }
@@ -46,69 +47,24 @@ class SetUser extends Component {
   editAddresss = () => {
     console.log('131313')
   }
-  handleInput = (e) => {
-    let value = e.target.value 
-    this.setState({
-      name: value   // 是一个异步的过程, 不要在里面用e.target
-    })
-    this.inputValidate()
-  }
-  inputValidate = () => {
-    let name = this.state.name
-    if (name.length < 5 || name.length > 24) {
-      this.setState({
-        activeInput: 'active-input',
-        activeText: 'active-text',
-        fontopacity: ''
-      })
-      return false
-    } else {
-      this.setState({
-        activeInput: '',
-        activeText: '',
-        fontopacity: 'fontopacity'
-      })
-      return true
-    }
-  }
-  resetName = () => {
-    let checkResult = this.inputValidate()
-    if (!checkResult) {
-      return
-    }
-    this.props.resetUserInfo('username', this.state.name)
-    this.props.history.goBack()
-  }
   componentWillMount () {
-    console.log(this.props.location, 'mar')
     this.initData()
   }
   render () {
     return (
       <div className='rating-page'>
         <Header title={this.state.headerTitle} goBack={this.goBack} edit={this.state.type==='address'?this.editAddresss: null}/>
-        {
-          this.state.type==='name'&&<section className='setname'>
-            <section className='setname-top'>
-            <input type="text" placeholder='输入用户名' value={this.state.name} onChange={this.handleInput.bind(this)} className={this.state.activeInput}/>
-              
-              <div>
-              {!this.state.activeText?<p>用户只能修改一次(5~24字符之间)</p>:
-                <p className={this.state.activeText}>用户名长度在5到24位之间</p>}
-              </div>
-            </section>
-            <section className='reset'>
-              <button className={this.state.fontopacity} onClick={this.resetName}>确认修改</button>
-            </section>
-          </section>
-        }
-        {
-          this.state.type==='address'&&<section>9124104</section>
-        }
+        {/* 子路由在父级配置，react-router4新特性，更加灵活 */}
+        <Switch>
+          <Route path={`${this.props.match.path}/name`} component={Name} />
+          <Route path={`${this.props.match.path}/address`} component={Address} />
+          <Route path={`${this.props.match.path}/add`} component={Add} />
+        </Switch>
       </div>
     )
   }
 }
+
 export default connect(state => ({
   userInfo: state.userInfo
 }), {

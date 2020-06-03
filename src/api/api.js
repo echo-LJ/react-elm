@@ -1,6 +1,5 @@
 import Server from './server'
 import {getUrlConcat} from '../utils/commons'
-
 class API extends Server{
   /**
    *  用途：获取验证码
@@ -20,7 +19,7 @@ class API extends Server{
           response: result,
           data: params,
         }
-        return err
+        throw err
       }
     } catch(err){
       throw err
@@ -44,13 +43,14 @@ class API extends Server{
           response: result,
           data: params,
         }
-        throw err
+        return err
       }
     } catch (err) {
       throw err
     }
   }
-  /**
+
+   /**
    * 获取用户消息
    * @param {*} get的拼接参数
    */
@@ -71,6 +71,7 @@ class API extends Server{
       throw err
     }
   }
+
    /**
    *  用途：上传图片
    *  @url https://elm.cangdu.org/v1/addimg/shop
@@ -96,6 +97,34 @@ class API extends Server{
       throw err;
     }
   }
+
+
+   /**
+   *  用途：上传图片
+   *  @url https://elm.cangdu.org/v1/addimg/shop
+   *  返回status为1表示成功
+   *  @method post
+   *  @return {promise}
+   */
+  async getAddress(params = {}, id){
+    try{
+      let result = await this.axios('get', '/v1/users/' + id + '/addresses', params); 
+      if(result){
+        return result;
+      }else{
+        let err = {
+          tip: '获取地址失败',
+          response: result,
+          data: params,
+          url: '//elm.cangdu.org/v1/carts/addresses',
+        }
+        throw err;
+      }
+    }catch(err){
+      throw err;
+    }
+  }
+
 }
 
-export default new API() 
+export default new API()

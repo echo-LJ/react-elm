@@ -8,21 +8,12 @@ export const saveUserInfo = (value) => {
   }
 }
 
-/**
- * 保存图片
- * @param {*} value 
- */
-export const saveAvander = (imgPath) => {
+// 修改用户信息
+export const resetUserInfo = (datatype, value) => {
   return {
-    type: user.SAVE_AVANDER,
-    imgPath
-  }
-} 
+    type: user.RESET_USERINFO,
+    datatype,
+    value,
 
-// 保存图片地址
-export const saveImg = path => {
-  return {
-    type: user.SAVEIMG,
-    path,
   }
 }

@@ -6,6 +6,7 @@ import asyncComponent from '@/utils/asyncComponent'
 const login = asyncComponent(() => import("@/pages/login/login"))
 const profile = asyncComponent(() => import("@/pages/profile/profile"))
 const info = asyncComponent(() => import("@/pages/info/info"))
+const setUser = asyncComponent(() => import("@/pages/set_user/set_user"))
 
 export default class RouteConfig extends Component {
   render () {
@@ -15,6 +16,7 @@ export default class RouteConfig extends Component {
           <Route path="/login" component= {login}/>
           <Route path="/profile" component= {profile}/>
           <Route path="/info"  component= {info}/> 
+          <Route path="/setuser"  component= {setUser}/>
           <Redirect exact from='/' to='/login'/>
           <Route component= {login}/>
         </Switch>

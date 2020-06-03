@@ -4,10 +4,11 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import Header from '@/components/header/header'
 import Footer from '@/components/footer/footer'
+import { is, fromJS } from 'immutable';  // 保证数据的不可变
 import QueueAnim from 'rc-queue-anim'
-// import ScrollAnim from 'rc-scroll-anim'
-import {saveAvander, saveUserInfo} from '@/store/user/action'
+import {saveUserInfo} from '@/store/user/action'
 import './profile.scss'
+
 import {getImgPath} from '../../utils/commons'
 import API from '../../api/api'
 
@@ -15,15 +16,12 @@ import API from '../../api/api'
 class Profile extends Component {
   static propTypes = {
     userInfo: PropTypes.object.isRequired,
-    saveAvander: PropTypes.func.isRequired,
     saveUserInfo: PropTypes.func.isRequired,
   }
   state = {
     username: '登录/注册',
-    avatar: '',
     mobile: '暂无绑定手机',
     imgpath: '',
-    imgUrl: '',
     balance: 0,            //我的余额
     count : 0,             //优惠券个数
     pointNumber : 0,       //积分数
@@ -31,10 +29,8 @@ class Profile extends Component {
   initData  = () => {
     let newState = {}
     if (this.props.userInfo && this.props.userInfo.user_id) {
-      newState.avatar = this.props.userInfo.avatar
       newState.mobile = this.props.userInfo.mobile || '暂无手机绑定'
       newState.username = this.props.userInfo.username
-      newState.imgUrl = '//elm.cangdu.org/img/1669599be6119829.jpg'
       newState.balance = this.props.userInfo.balance
       newState.count = this.props.userInfo.gift_amount
       newState.pointNumber = this.props.userInfo.point
@@ -52,27 +48,46 @@ class Profile extends Component {
     this.initData()
     
   }
+  
+  componentWillMount () {
+    console.log('dimount')
+    if (this.props.userInfo.user_id) {
+      this.initData()
+      return
+    }
+    this.getUserInfo()
+  }
   componentDidMount () {
     this.getUserInfo()
   }
-  goTo = () => {
-    window.location.href = 'http://www.baidu.com'
+  componentWillReceiveProps(nextProps){  // 属性props改变时候触发
+    console.log('recu')
+    if(!is(fromJS(this.props.proData), fromJS(nextProps.proData))){   //
+      this.initData(nextProps);
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState) {   // 判断是否要更新render, return true 更新  return false不更新
+    console.log('udapte')
+    return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
+  }
+  goBack = () => {
+    this.props.history.goBack()
   }
   render () {
     return (
       <div className='profile-container'>
       <QueueAnim type='bottom'>
-        <Header title="我的" goBack="true"  key='s1'/>
+      <Header title="我的" goBack={this.goBack}  key='s1'/>
         <section  key='s2'>
             <section className='profile-number' >
               <Link to={this.props.userInfo&&this.props.userInfo.user_id?'/info':'/login'} className='profile-link'>
-                <img src={this.state.imgUrl} alt='img is wrong' className='private-image'/>
+              <img src={this.props.userInfo.imgpath} alt='img is wrong' className='private-image'/>
                 <div className='user-info'>
-                  <p>{this.state.username}</p>
-                  <p>
+                  <div>{this.state.username}</div>
+                  <div>
                     <div className='icon-tel'></div>
                     <span className='icon-mobile-number'>{this.state.mobile}</span>
-                  </p>
+                  </div>
                 </div>
                 <div className='icon-arrow-right'>
                 </div>
@@ -145,5 +160,5 @@ class Profile extends Component {
 export default connect(state => ({
   userInfo: state.userInfo
 }), {
-  saveAvander,saveUserInfo
+  saveUserInfo
 })(Profile)

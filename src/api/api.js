@@ -20,7 +20,7 @@ class API extends Server{
           response: result,
           data: params,
         }
-        throw err
+        return err
       }
     } catch(err){
       throw err

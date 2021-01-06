@@ -138,7 +138,7 @@
   },
   "devDependencies": {
     "animated": "^0.2.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "fastclick": "^1.0.6",
     "immutable": "^4.0.0-rc.12",
     "node-sass": "^4.14.1",
